@@ -383,3 +383,4 @@ monotonic_align/core.c
 .DS_Store
 
 model/*.pth
+.env

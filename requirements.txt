@@ -8,6 +8,7 @@ openjtalk>=0.3.0.dev2
 jamo
 pypinyin
 pypinyin_dict
+python-dotenv
 jieba
 protobuf
 cn2an

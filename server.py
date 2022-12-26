@@ -7,13 +7,19 @@ import json
 
 import uvicorn
 from loguru import logger
-from fastapi import BackgroundTasks, FastAPI
+from fastapi import BackgroundTasks, FastAPI, HTTPException, Depends
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 # from celery_worker import tts_order
 
 from api_server import TTS_REQ, TTS_Generate
 
 app = FastAPI()
+security = HTTPBasic()
 with open("model/index.json", "r", encoding="utf-8") as f:
     models_info = json.load(f)
 _Model_list = {model_name: TTS_Generate(model_path=f"./model/{model_name}") for model_name in
@@ -28,7 +34,11 @@ logger.add(sink='run.log',
 
 
 @app.post("/tts/generate")
-def tts(tts_req: TTS_REQ):
+def tts(tts_req: TTS_REQ, credentials: HTTPBasicCredentials = Depends(security)):
+    username = os.getenv("USERNAME")
+    password = os.getenv("PASSWORD")
+    if credentials.username != username or credentials.password != password:
+        raise HTTPException(status_code=401, detail="Incorrect email or password")
     global _Model_list
     _reqTTS = _Model_list.get(tts_req.model_name)
     _reqTTS: TTS_Generate

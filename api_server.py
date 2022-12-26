@@ -171,7 +171,7 @@ class TTS_Generate(object):
             _x_tst = _stn_tst.unsqueeze(0)
             _x_tst_lengths = LongTensor([_stn_tst.size(0)])
             _sid = LongTensor([speaker_ids])
-            _audio = self.net_g_ms.infer(_x_tst, _x_tst_lengths, sid=_sid, noise_scale=.667, noise_scale_w=0.8,
+            _audio = self.net_g_ms.infer(_x_tst, _x_tst_lengths, sid=_sid, noise_scale=_noise_scale, noise_scale_w=_noise_scale_w,
                                          length_scale=1.0 / _length_scale)[0][0, 0].data.cpu().float().numpy()
         # 写出返回
         file = BytesIO()
