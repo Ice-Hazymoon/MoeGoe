@@ -133,9 +133,9 @@ class TTS_Generate(object):
     def get_speaker_list(self):
         # 二维数组 [id,name]
         id_list = []
-        if len(self.speakers) > 100:
-            print("TOO MANY SPEAKERS")
-            return id_list.append({"id": 0, "name": "default"})
+        # if len(self.speakers) > 100:
+        #     print("TOO MANY SPEAKERS")
+        #     return id_list.append({"id": 0, "name": "default"})
         for ids, name in enumerate(self.speakers):
             id_list.append({"id": ids, "name": name})
         return id_list
@@ -180,7 +180,7 @@ class TTS_Generate(object):
             sf.write(file, _audio, self.hps_ms.data.sampling_rate, format='ogg', subtype='vorbis')
         elif audio_type == "wav":
             # Write out audio as 24bit PCM WAV
-            sf.write(file, _audio, self.hps_ms.data.sampling_rate, subtype='PCM_24')
+            sf.write(file, _audio, self.hps_ms.data.sampling_rate, format='wav', subtype='PCM_24')
         elif audio_type == "flac":
             # Write out audio as 24bit Flac
             sf.write(file, _audio, self.hps_ms.data.sampling_rate, format='flac', subtype='PCM_24')

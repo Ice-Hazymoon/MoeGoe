@@ -1,5 +1,6 @@
 """ from https://github.com/keithito/tacotron """
 from text import cleaners
+import re
 
 
 def text_to_sequence(text, symbols, cleaner_names):
@@ -15,11 +16,19 @@ def text_to_sequence(text, symbols, cleaner_names):
   sequence = []
 
   clean_text = _clean_text(text, cleaner_names)
-  for symbol in clean_text:
-    if symbol not in _symbol_to_id.keys():
-      continue
-    symbol_id = _symbol_to_id[symbol]
-    sequence += [symbol_id]
+  # clean_text = re.sub(r"\[[^\]]*\]", "", clean_text) # remove [xxx] in text
+  # clean_text = re.sub(r"(@\[A-Za-z0-9]+)|([^0-9A-Za-z \t])|(\w+:\/\/\S+)|^rt|http.+?", "", clean_text) # remove @xxx, non-ascii, url, rt, http
+  print(clean_text)
+  for symbol in clean_text.split(" "):
+    if symbol in _symbol_to_id:
+      sequence.append(_symbol_to_id[symbol])
+    else:
+      for s in symbol:
+        if s in _symbol_to_id:
+          sequence.append(_symbol_to_id[s])
+    sequence.append(_symbol_to_id[" "])
+  if sequence[-1] == _symbol_to_id[" "]:
+    sequence = sequence[:-1]
   return sequence
 
 

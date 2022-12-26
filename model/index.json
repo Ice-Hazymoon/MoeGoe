@@ -1,5 +1,6 @@
 {
   "model": [
-    "1374_epochs.pth"
+    "model15.pth",
+    "genshin.pth"
   ]
 }

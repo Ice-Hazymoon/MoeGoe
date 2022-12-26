@@ -1,4 +1,10 @@
 import re
+from pypinyin import pinyin, lazy_pinyin, load_phrases_dict, Style, load_single_dict
+from pypinyin.style._utils import get_finals, get_initials
+from pypinyin_dict.phrase_pinyin_data import cc_cedict
+from pypinyin_dict.pinyin_data import kmandarin_8105
+kmandarin_8105.load()
+cc_cedict.load()
 
 
 def japanese_cleaners(text):
@@ -113,6 +119,22 @@ def thai_cleaners(text):
     text = latin_to_thai(text)
     return text
 
+def chinese_cleaners2(text):
+  text = re.sub(r'\[ZH\](.*?)\[ZH\]', lambda x: x.group(1)+' ', text)
+  result = " ".join([
+    p
+    for phone in pinyin(text, style=Style.TONE3, v_to_u=True)
+    for p in [
+      get_initials(phone[0], strict=True),
+      get_finals(phone[0][:-1], strict=True) + phone[0][-1]
+      if phone[0][-1].isdigit()
+      else get_finals(phone[0], strict=True)
+      if phone[0][-1].isalnum()
+      else phone[0],
+    ]
+    if len(p) != 0 and not p.isdigit()
+  ])
+  return result
 
 def shanghainese_cleaners(text):
     from text.shanghainese import shanghainese_to_ipa
