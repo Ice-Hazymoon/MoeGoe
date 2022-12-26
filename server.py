@@ -62,4 +62,4 @@ def tts(tts_req: TTS_REQ, credentials: HTTPBasicCredentials = Depends(security))
 
 
 if __name__ == '__main__':
-    uvicorn.run('server:app', host='127.0.0.1', port=9557, reload=True, log_level="debug", workers=1)
+    uvicorn.run('server:app', host='0.0.0.0', port=9557, reload=True, log_level="debug", workers=1)
